@@ -74,10 +74,10 @@
 
         document.getElementById('test').value = jpegUrl
 
-        //url: "https://wmzkld6rfg.execute-api.us-east-1.amazonaws.com/Dev/lambda",
 
+	// The url below must be replaced during code_build execution. Once the apig endpoint is only discovered after the aws cloudformation deploy command
         $.ajax({
-            url: "https://wg60aw8urj.execute-api.us-west-2.amazonaws.com/dev/lambda",
+            url: "%APIGATEWAY_URL%",
             type: "POST",
             crossDomain: true,
             data: jpegUrl,
