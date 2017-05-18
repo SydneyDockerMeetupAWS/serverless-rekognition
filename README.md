@@ -24,7 +24,7 @@ aws s3api create-bucket --bucket noops-wip-pdx --region us-west-2
 ## How to deploy
 * Get the code:
 ```bash
-git clone ssh://git.amazon.com/pkg/SYD-Deployment-NoOps
+git clone https://github.com/SydneyDockerMeetupAWS/serverless-rekognition.git
 ```
 
 * Create lambda packages
