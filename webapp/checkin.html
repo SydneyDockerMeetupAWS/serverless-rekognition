@@ -4,7 +4,7 @@
             <script type="text/javascript">
             window.setTimeout(function() {
                 $("#welcome_message").fadeTo(500, 0).slideUp(500, function(){
-                    $(this).remove(); 
+                    $(this).remove();
                 });
             }, 7000);
         </script>
@@ -22,13 +22,11 @@
 <title>FaceVault Registration</title>
 
 <script>
-   
-    function displayMessage(level, msg){
 
+    function displayMessage(level, msg){
         var html_div = '';
         var id_div = ''
         var span_class_type = '';
-
         switch(level){
             case "success":
                 id_div = "welcome_message";
@@ -43,56 +41,44 @@
                 span_class_type = "label label-warning";
                 break;
         }
-
         html_div = '<div id="' + id_div + '" style="text-align:center;" ><span class="close" data-dismiss="alert">&times;</span><h3 id="h3message"><span class="' + span_class_type + '">' + msg + '</span></h3></div>';
-
         //Print the dynamic message in the bottom
         $("#divMessage").html(html_div);
             window.setTimeout(function() {
             $("#"+ id_div).fadeTo(500, 0).slideUp(500, function(){
-                $(this).remove(); 
+                $(this).remove();
             });
         }, 8000);
     }
-
     function invokeCheckin(){
-
         // Elements for taking the snapshot from the video
         var canvas = document.getElementById('canvas');
         var context = canvas.getContext('2d');
         var video = document.getElementById('video');
         var jpegUrl = '';
         var pngUrl = '';
-
         displayMessage("searching", "Searching...");
-
         // Trigger photo take
         context.drawImage(video, 0, 0, 640, 480);
         jpegUrl = canvas.toDataURL("image/jpeg");
         pngUrl = canvas.toDataURL();
         canvas.style.display="none";
-
         document.getElementById('test').value = jpegUrl
-
-
 	// The url below must be replaced during code_build execution. Once the apig endpoint is only discovered after the aws cloudformation deploy command
         $.ajax({
-            url: "%APIGATEWAY_URL%",
+            url: "https://wg60aw8urj.execute-api.us-west-2.amazonaws.com/Stage/lambda",
             type: "POST",
             crossDomain: true,
             data: jpegUrl,
-            contentType: 'application/json', 
+            contentType: 'application/json',
             processData: false,
             success: function(data) {
-       
+
                 const json = JSON.stringify(data);
                 const response = $.parseJSON(json);
-
                 if (response.hasOwnProperty('statusCode')){
-
                     const statusCode = response.statusCode;
                     const output = $.parseJSON(response.body).output;
-
                     if (statusCode == "200"){
                         displayMessage("success", output);
                     } else {
@@ -100,17 +86,16 @@
                     }
                 } else {
                     displayMessage("error", "Ops! We were not able to recognize you. Please come to the reception ;)");
-                }                
+                }
             },
             error : function(jqXHR, textStatus, errorThrown) {
                 displayMessage("error", "Ops!! We were not able to recognize you. Please come to the reception ;)");
-            }    
-        });        
+            }
+        });
     }
-
 </script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  
+
 </head>
 <body>
     <div style="text-align:center;">
@@ -128,12 +113,13 @@
     <script>
     // Grab elements, create settings, etc.
     var video = document.getElementById('video');
-
     // Get access to the camera!
     if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         // Not adding `{ audio: true }` since we only want video now
         navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
-            video.src = window.URL.createObjectURL(stream);
+            //video.src = window.URL.createObjectURL(stream);
+            video.srcObject = stream;
+
             video.play();
         });
     }
@@ -141,3 +127,4 @@
 
 </body>
 </html>
+
